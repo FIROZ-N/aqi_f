@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .result-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .aqi-value {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card result-card">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="text-center">📊 Prediction Result</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h4>Predicted Air Quality Index</h4>
+                            <div class="aqi-value" style="color: {{ color }};">
+                                {{ prediction }}
+                            </div>
+                            <h5 style="color: {{ color }}; margin-bottom: 30px;">
+                                {{ category }}
+                            </h5>
+                        </div>
+                        
+                        <div class="input-summary">
+                            <h5>Input Parameters:</h5>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Value</th>
+                                        <th>Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>PM2.5</td>
+                                        <td>{{ input_data['PM2.5'] }}</td>
+                                        <td>µg/m³</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PM10</td>
+                                        <td>{{ input_data['PM10'] }}</td>
+                                        <td>µg/m³</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NO₂</td>
+                                        <td>{{ input_data['NO2'] }}</td>
+                                        <td>µg/m³</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CO</td>
+                                        <td>{{ input_data['CO'] }}</td>
+                                        <td>mg/m³</td>
+                                    </tr>
+                                    <tr>
+                                        <td>O₃</td>
+                                        <td>{{ input_data['O3'] }}</td>
+                                        <td>µg/m³</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="/" class="btn back-btn">Make Another Prediction</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <h1 class="hero-title">Breathe Easy with <span class="gradient-text">AI-Powered</span> Air Quality Insights</h1>
+                <p class="hero-subtitle">Predict Air Quality Index in real-time using advanced machine learning. Get instant AQI predictions and health recommendations based on pollutant levels.</p>
+                <div class="hero-buttons">
+                    <a href="/predict" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-chart-line me-2"></i>Predict AQI
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-visual">
+                    <div class="aqi-meter">
+                        <div class="meter-circle">
+                            <div class="meter-value">AQI</div>
+                            <div class="meter-scale">
+                                <span class="scale-point" style="--i:0">0</span>
+                                <span class="scale-point" style="--i:1">50</span>
+                                <span class="scale-point" style="--i:2">100</span>
+                                <span class="scale-point" style="--i:3">150</span>
+                                <span class="scale-point" style="--i:4">200</span>
+                                <span class="scale-point" style="--i:5">300</span>
+                                <span class="scale-point" style="--i:6">500</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2>Why Choose AirQuality AI?</h2>
+            <p>Advanced features for comprehensive air quality monitoring</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI-Powered Predictions</h4>
+                    <p>Utilizes Gradient Boosting algorithm trained on extensive air quality data for accurate AQI forecasting.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Real-time Analysis</h4>
+                    <p>Get instant AQI predictions based on current pollutant levels with comprehensive health recommendations.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Health Focused</h4>
+                    <p>Receive personalized health advice and precautions based on predicted air quality conditions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2>How It Works</h2>
+            <p>Simple steps to predict air quality</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h5>Input Pollutants</h5>
+                    <p>Enter levels of key air pollutants: PM2.5, PM10, NO₂, CO, and O₃</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h5>AI Processing</h5>
+                    <p>Our Gradient Boosting model analyzes the data using advanced algorithms</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h5>Get Prediction</h5>
+                    <p>Receive instant AQI score with color-coded category and health impact</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h5>Take Action</h5>
+                    <p>Follow personalized recommendations to protect your health</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h2>Ready to Check Your Air Quality?</h2>
+        <p>Get instant AQI predictions and protect your health today</p>
+        <a href="/predict" class="btn btn-primary btn-lg">
+            <i class="fas fa-play me-2"></i>Start Predicting
+        </a>
+    </div>
+</section>
+{% endblock %}

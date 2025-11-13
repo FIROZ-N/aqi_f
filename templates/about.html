@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Header -->
+                <div class="about-header text-center">
+                    <h1>About AirQuality AI</h1>
+                    <p>Revolutionizing air quality monitoring with artificial intelligence</p>
+                </div>
+
+                <!-- Mission Section -->
+                <div class="mission-section">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2>Our Mission</h2>
+                            <p>To provide accurate, real-time air quality predictions that empower individuals and communities to make informed decisions about their health and outdoor activities.</p>
+                            <p>Using cutting-edge machine learning technology, we transform complex environmental data into actionable insights that everyone can understand and use.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mission-visual">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technology Stack -->
+                <div class="tech-stack">
+                    <h2 class="text-center">Technology Stack</h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="tech-card">
+                                <i class="fab fa-python"></i>
+                                <h4>Python & Flask</h4>
+                                <p>Backend development with robust web framework and scientific computing libraries</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="tech-card">
+                                <i class="fas fa-brain"></i>
+                                <h4>Scikit-learn</h4>
+                                <p>Machine learning library powering our Gradient Boosting prediction model</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="tech-card">
+                                <i class="fas fa-chart-bar"></i>
+                                <h4>Data Analysis</h4>
+                                <p>Pandas and NumPy for comprehensive data processing and analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Details -->
+                <div class="model-details">
+                    <h2>Machine Learning Model</h2>
+                    <div class="model-card">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Gradient Boosting Regressor</h4>
+                                <p>Our model uses an ensemble learning method that builds multiple decision trees sequentially, with each tree correcting the errors of the previous one.</p>
+                                
+                                <div class="model-specs">
+                                    <div class="spec-item">
+                                        <strong>Algorithm:</strong>
+                                        <span>Gradient Boosting Machine (GBM)</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Estimators:</strong>
+                                        <span>300 trees</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Learning Rate:</strong>
+                                        <span>0.05</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Max Depth:</strong>
+                                        <span>3 levels</span>
+                                    </div>
+                                    <div class="spec-item">
+                                        <strong>Subsample:</strong>
+                                        <span>80% of data</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Features Used:</h5>
+                                <ul class="feature-list">
+                                    <li>
+                                        <i class="fas fa-smog"></i>
+                                        <span>PM2.5 - Fine particulate matter</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-dust"></i>
+                                        <span>PM10 - Coarse particulate matter</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-industry"></i>
+                                        <span>NO₂ - Nitrogen dioxide</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-car"></i>
+                                        <span>CO - Carbon monoxide</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-sun"></i>
+                                        <span>O₃ - Ozone</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Source -->
+                <div class="data-source">
+                    <h2>Data & Methodology</h2>
+                    <div class="data-card">
+                        <h4>Training Data</h4>
+                        <p>Our model was trained on comprehensive air quality data collected from multiple monitoring stations across various cities and seasons. The dataset includes:</p>
+                        
+                        <div class="data-highlights">
+                            <div class="highlight">
+                                <i class="fas fa-database"></i>
+                                <div>
+                                    <strong>Extensive Coverage</strong>
+                                    <span>Multiple geographical locations</span>
+                                </div>
+                            </div>
+                            <div class="highlight">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Seasonal Data</strong>
+                                    <span>All seasons represented</span>
+                                </div>
+                            </div>
+                            <div class="highlight">
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>Quality Assured</strong>
+                                    <span>Cleaned and validated data</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Impact -->
+                <div class="health-impact">
+                    <h2>Health Impact Awareness</h2>
+                    <p>Understanding air quality is crucial for protecting public health. Poor air quality can lead to:</p>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="impact-card">
+                                <i class="fas fa-lungs"></i>
+                                <h5>Respiratory Issues</h5>
+                                <p>Asthma, bronchitis, and other breathing problems</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="impact-card">
+                                <i class="fas fa-heart"></i>
+                                <h5>Cardiovascular Problems</h5>
+                                <p>Increased risk of heart attacks and strokes</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="impact-card">
+                                <i class="fas fa-brain"></i>
+                                <h5>Cognitive Effects</h5>
+                                <p>Impact on cognitive function and development</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.about-page {
+    padding: 120px 0 80px;
+    background: var(--light);
+}
+
+.about-header {
+    margin-bottom: 4rem;
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+.mission-section {
+    margin-bottom: 4rem;
+    padding: 3rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.mission-section h2 {
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+}
+
+.mission-visual {
+    text-align: center;
+    font-size: 8rem;
+    color: var(--primary);
+    opacity: 0.7;
+}
+
+.tech-stack {
+    margin-bottom: 4rem;
+}
+
+.tech-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.tech-card:hover {
+    transform: translateY(-5px);
+}
+
+.tech-card i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.tech-card h4 {
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+.model-details {
+    margin-bottom: 4rem;
+}
+
+.model-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.model-specs {
+    margin-top: 1.5rem;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.feature-list i {
+    color: var(--primary);
+    margin-right: 1rem;
+    width: 20px;
+}
+
+.data-source, .health-impact {
+    margin-bottom: 4rem;
+}
+
+.data-card, .impact-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.data-highlights {
+    margin-top: 1.5rem;
+}
+
+.highlight {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.highlight i {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-right: 1rem;
+}
+
+.impact-card {
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.impact-card:hover {
+    transform: translateY(-5px);
+}
+
+.impact-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.impact-card h5 {
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,789 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="predict-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Header -->
+                <div class="predict-header text-center">
+                    <h1>Air Quality Prediction</h1>
+                    <p>Enter pollutant levels to get instant AQI prediction and personalized health recommendations</p>
+                </div>
+
+                <!-- Prediction Card -->
+                <div class="predict-card">
+                    <div class="row">
+                        <!-- Input Form -->
+                        <div class="col-md-6">
+                            <form id="predictionForm" action="/predict-aqi" method="POST">
+                                {% if error %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                                {% endif %}
+                                
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-smog"></i>
+                                    </div>
+                                    <div class="input-content">
+                                        <label for="pm25">PM2.5 (µg/m³)</label>
+                                        <input type="number" step="0.1" id="pm25" name="pm25" 
+                                               placeholder="e.g., 45.2" required
+                                               oninput="updateAdvice()">
+                                        <small>Fine particulate matter - diameter less than 2.5 micrometers</small>
+                                        <div class="real-time-advice" id="pm25-advice"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-dust"></i>
+                                    </div>
+                                    <div class="input-content">
+                                        <label for="pm10">PM10 (µg/m³)</label>
+                                        <input type="number" step="0.1" id="pm10" name="pm10" 
+                                               placeholder="e.g., 78.5" required
+                                               oninput="updateAdvice()">
+                                        <small>Coarse particulate matter - diameter less than 10 micrometers</small>
+                                        <div class="real-time-advice" id="pm10-advice"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-industry"></i>
+                                    </div>
+                                    <div class="input-content">
+                                        <label for="no2">NO₂ (µg/m³)</label>
+                                        <input type="number" step="0.1" id="no2" name="no2" 
+                                               placeholder="e.g., 28.1" required
+                                               oninput="updateAdvice()">
+                                        <small>Nitrogen dioxide - primarily from vehicle emissions</small>
+                                        <div class="real-time-advice" id="no2-advice"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                    <div class="input-content">
+                                        <label for="co">CO (mg/m³)</label>
+                                        <input type="number" step="0.1" id="co" name="co" 
+                                               placeholder="e.g., 1.2" required
+                                               oninput="updateAdvice()">
+                                        <small>Carbon monoxide - from incomplete combustion</small>
+                                        <div class="real-time-advice" id="co-advice"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-sun"></i>
+                                    </div>
+                                    <div class="input-content">
+                                        <label for="o3">O₃ (µg/m³)</label>
+                                        <input type="number" step="0.1" id="o3" name="o3" 
+                                               placeholder="e.g., 62.3" required
+                                               oninput="updateAdvice()">
+                                        <small>Ozone - ground-level ozone from chemical reactions</small>
+                                        <div class="real-time-advice" id="o3-advice"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Real-time Summary -->
+                                <div class="real-time-summary" id="realTimeSummary">
+                                    <h5><i class="fas fa-info-circle me-2"></i>Current Input Analysis</h5>
+                                    <div id="pollutantSummary"></div>
+                                    <div id="preliminaryAdvice"></div>
+                                </div>
+
+                                <button type="submit" class="btn-predict">
+                                    <i class="fas fa-calculator me-2"></i>
+                                    Calculate Full AQI Report
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Info Panel -->
+                        <div class="col-md-6">
+                            <div class="info-panel">
+                                <h4><i class="fas fa-info-circle me-2"></i>Real-time Health Advice</h4>
+                                
+                                <!-- Dynamic Advice Section -->
+                                <div class="dynamic-advice" id="dynamicAdvice">
+                                    <div class="advice-placeholder">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <p>Start entering pollutant values to see real-time health advice and recommendations.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Pollutant Guidelines -->
+                                <div class="guidelines-section">
+                                    <h5>Safe Levels Guide</h5>
+                                    <div class="guideline-item">
+                                        <span class="pollutant-name">PM2.5</span>
+                                        <span class="safe-level">≤ 12 µg/m³</span>
+                                        <small>24-hour mean (WHO)</small>
+                                    </div>
+                                    <div class="guideline-item">
+                                        <span class="pollutant-name">PM10</span>
+                                        <span class="safe-level">≤ 45 µg/m³</span>
+                                        <small>24-hour mean (WHO)</small>
+                                    </div>
+                                    <div class="guideline-item">
+                                        <span class="pollutant-name">NO₂</span>
+                                        <span class="safe-level">≤ 25 µg/m³</span>
+                                        <small>24-hour mean (WHO)</small>
+                                    </div>
+                                    <div class="guideline-item">
+                                        <span class="pollutant-name">CO</span>
+                                        <span class="safe-level">≤ 4 mg/m³</span>
+                                        <small>8-hour mean (WHO)</small>
+                                    </div>
+                                    <div class="guideline-item">
+                                        <span class="pollutant-name">O₃</span>
+                                        <span class="safe-level">≤ 100 µg/m³</span>
+                                        <small>8-hour mean (WHO)</small>
+                                    </div>
+                                </div>
+
+                                <!-- Quick Tips -->
+                                <div class="quick-tips">
+                                    <h5>💡 Quick Tips</h5>
+                                    <ul>
+                                        <li>Monitor air quality before outdoor activities</li>
+                                        <li>Use air purifiers when indoor air quality is poor</li>
+                                        <li>Keep windows closed during high pollution periods</li>
+                                        <li>Wear masks in heavily polluted areas</li>
+                                        <li>Stay hydrated to help your body cope with pollution</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Impact Section -->
+                <div class="health-impact-preview">
+                    <h3>Understanding Health Impacts</h3>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="impact-preview-card">
+                                <i class="fas fa-lungs"></i>
+                                <h5>Respiratory System</h5>
+                                <p>High pollution can cause asthma, bronchitis, and reduced lung function</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="impact-preview-card">
+                                <i class="fas fa-heart"></i>
+                                <h5>Cardiovascular</h5>
+                                <p>Increases risk of heart attacks, strokes, and blood pressure issues</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="impact-preview-card">
+                                <i class="fas fa-brain"></i>
+                                <h5>Brain & Cognition</h5>
+                                <p>Can affect cognitive function, memory, and neurological development</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Real-time Advice -->
+<script>
+// Pollutant safety thresholds (WHO guidelines)
+const thresholds = {
+    pm25: { safe: 12, moderate: 35, high: 55, severe: 150 },
+    pm10: { safe: 45, moderate: 100, high: 150, severe: 250 },
+    no2: { safe: 25, moderate: 50, high: 100, severe: 200 },
+    co: { safe: 4, moderate: 9, high: 15, severe: 30 },
+    o3: { safe: 100, moderate: 130, high: 160, severe: 240 }
+};
+
+// Advice templates for different levels
+const adviceTemplates = {
+    pm25: {
+        safe: "✅ PM2.5 levels are within safe limits. Good for outdoor activities.",
+        moderate: "⚠️ PM2.5 levels are moderate. Sensitive individuals should reduce prolonged exertion.",
+        high: "🚨 PM2.5 levels are high. Everyone should reduce outdoor activities.",
+        severe: "🔴 PM2.5 levels are severe! Avoid outdoor activities and use air purifiers."
+    },
+    pm10: {
+        safe: "✅ PM10 levels are safe. Minimal impact on health.",
+        moderate: "⚠️ PM10 levels are moderate. May cause discomfort to sensitive people.",
+        high: "🚨 PM10 levels are high. Can aggravate respiratory conditions.",
+        severe: "🔴 PM10 levels are severe! Stay indoors and use masks if going outside."
+    },
+    no2: {
+        safe: "✅ NO₂ levels are safe. No significant health concerns.",
+        moderate: "⚠️ NO₂ levels are moderate. May cause respiratory irritation.",
+        high: "🚨 NO₂ levels are high. Can worsen asthma and bronchitis.",
+        severe: "🔴 NO₂ levels are severe! High risk for respiratory patients."
+    },
+    co: {
+        safe: "✅ CO levels are safe. No immediate health risks.",
+        moderate: "⚠️ CO levels are moderate. May cause headaches in sensitive individuals.",
+        high: "🚨 CO levels are high. Can cause dizziness and nausea.",
+        severe: "🔴 CO levels are severe! Immediate health risk - ensure proper ventilation."
+    },
+    o3: {
+        safe: "✅ O₃ levels are safe. Good for outdoor activities.",
+        moderate: "⚠️ O₃ levels are moderate. May cause throat irritation.",
+        high: "🚨 O₃ levels are high. Can trigger asthma attacks.",
+        severe: "🔴 O₃ levels are severe! High risk for respiratory issues."
+    }
+};
+
+// Health recommendations based on overall pollution
+const healthRecommendations = {
+    good: {
+        title: "🌿 Excellent Air Quality",
+        advice: "Perfect conditions for outdoor activities. Enjoy your day!",
+        activities: [
+            "Ideal for outdoor exercise and sports",
+            "Great day for picnics and outdoor events",
+            "Perfect for children's outdoor play",
+            "No restrictions needed"
+        ],
+        precautions: [
+            "No special precautions needed",
+            "Stay hydrated during physical activities"
+        ]
+    },
+    moderate: {
+        title: "💛 Moderate Air Quality",
+        advice: "Generally acceptable, but sensitive individuals should take precautions.",
+        activities: [
+            "OK for most outdoor activities",
+            "Sensitive groups should reduce prolonged exertion",
+            "Good for light to moderate exercise",
+            "Monitor how you feel during activities"
+        ],
+        precautions: [
+            "Sensitive people: limit outdoor time",
+            "Stay hydrated",
+            "Pay attention to symptoms"
+        ]
+    },
+    unhealthy_sensitive: {
+        title: "🧡 Unhealthy for Sensitive Groups",
+        advice: "Members of sensitive groups may experience health effects.",
+        activities: [
+            "Sensitive groups: avoid prolonged outdoor exertion",
+            "General population: OK for light activities",
+            "Consider indoor alternatives",
+            "Shorten outdoor exercise duration"
+        ],
+        precautions: [
+            "Asthma patients: keep inhaler handy",
+            "Elderly and children: limit exposure",
+            "Use air purifiers at home",
+            "Keep windows closed during peak hours"
+        ]
+    },
+    unhealthy: {
+        title: "❤️ Unhealthy Air Quality",
+        advice: "Some members of the general public may experience health effects.",
+        activities: [
+            "Everyone should reduce outdoor activities",
+            "Avoid strenuous exercise outdoors",
+            "Move workouts indoors",
+            "Limit time spent outside"
+        ],
+        precautions: [
+            "Wear N95 masks if going outside",
+            "Use air purifiers continuously",
+            "Keep windows and doors closed",
+            "Monitor for symptoms like coughing"
+        ]
+    },
+    very_unhealthy: {
+        title: "💜 Very Unhealthy",
+        advice: "Health alert: The risk of health effects is increased for everyone.",
+        activities: [
+            "Avoid all outdoor activities",
+            "Postpone outdoor events",
+            "Work from home if possible",
+            "Children should stay indoors"
+        ],
+        precautions: [
+            "Stay indoors with windows closed",
+            "Use high-efficiency air purifiers",
+            "Wear masks if essential to go out",
+            "Seek medical help if symptoms worsen"
+        ],
+        emergency: [
+            "Health emergency for sensitive groups",
+            "Consider relocating if conditions persist"
+        ]
+    },
+    hazardous: {
+        title: "🖤 Hazardous Conditions",
+        advice: "Health warning of emergency conditions. Everyone should take precautions.",
+        activities: [
+            "STAY INDOORS",
+            "Cancel all outdoor activities",
+            "Schools and offices should close",
+            "Essential travel only with protection"
+        ],
+        precautions: [
+            "Remain indoors with sealed windows",
+            "Use multiple air purifiers",
+            "Wear N95 masks at all times outside",
+            "Evacuate if advised by authorities"
+        ],
+        emergency: [
+            "HEALTH EMERGENCY",
+            "Follow emergency service advice",
+            "Prepare emergency supplies",
+            "Monitor official health alerts"
+        ]
+    }
+};
+
+function getPollutantLevel(value, pollutant) {
+    const threshold = thresholds[pollutant];
+    if (value <= threshold.safe) return 'safe';
+    if (value <= threshold.moderate) return 'moderate';
+    if (value <= threshold.high) return 'high';
+    return 'severe';
+}
+
+function updateIndividualAdvice(pollutant, value) {
+    const adviceElement = document.getElementById(`${pollutant}-advice`);
+    if (!value || value === '') {
+        adviceElement.innerHTML = '';
+        return null;
+    }
+
+    const level = getPollutantLevel(value, pollutant);
+    const advice = adviceTemplates[pollutant][level];
+    
+    adviceElement.innerHTML = `
+        <div class="advice-badge level-${level}">
+            <i class="fas fa-${getAdviceIcon(level)}"></i>
+            ${advice}
+        </div>
+    `;
+    
+    return level;
+}
+
+function getAdviceIcon(level) {
+    const icons = {
+        safe: 'check-circle',
+        moderate: 'exclamation-triangle',
+        high: 'exclamation-circle',
+        severe: 'times-circle'
+    };
+    return icons[level] || 'info-circle';
+}
+
+function getOverallAssessment(levels) {
+    const levelWeights = { safe: 0, moderate: 1, high: 2, severe: 3 };
+    let maxLevel = 'safe';
+    
+    levels.forEach(level => {
+        if (level && levelWeights[level] > levelWeights[maxLevel]) {
+            maxLevel = level;
+        }
+    });
+    
+    return maxLevel;
+}
+
+function updateOverallAdvice(levels) {
+    const overallLevel = getOverallAssessment(levels);
+    const assessment = getOverallAssessmentCategory(overallLevel);
+    const recommendation = healthRecommendations[assessment];
+    
+    const dynamicAdvice = document.getElementById('dynamicAdvice');
+    
+    let emergencyHtml = '';
+    if (recommendation.emergency) {
+        emergencyHtml = `
+            <div class="emergency-alert">
+                <h6><i class="fas fa-exclamation-triangle"></i> Emergency Advice</h6>
+                <ul>
+                    ${recommendation.emergency.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
+    dynamicAdvice.innerHTML = `
+        <div class="overall-assessment level-${overallLevel}">
+            <div class="assessment-header">
+                <h5>${recommendation.title}</h5>
+                <p>${recommendation.advice}</p>
+            </div>
+            
+            <div class="recommendation-section">
+                <h6><i class="fas fa-running"></i> Activity Guidance</h6>
+                <ul>
+                    ${recommendation.activities.map(activity => `<li>${activity}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="recommendation-section">
+                <h6><i class="fas fa-shield-alt"></i> Health Precautions</h6>
+                <ul>
+                    ${recommendation.precautions.map(precaution => `<li>${precaution}</li>`).join('')}
+                </ul>
+            </div>
+            
+            ${emergencyHtml}
+        </div>
+    `;
+}
+
+function getOverallAssessmentCategory(level) {
+    const mapping = {
+        safe: 'good',
+        moderate: 'moderate',
+        high: 'unhealthy_sensitive',
+        severe: level === 'severe' ? 'unhealthy' : 'unhealthy_sensitive'
+    };
+    return mapping[level] || 'good';
+}
+
+function updatePollutantSummary(levels) {
+    const summaryElement = document.getElementById('pollutantSummary');
+    const pollutants = ['pm25', 'pm10', 'no2', 'co', 'o3'];
+    let allEmpty = true;
+    
+    const summaryItems = pollutants.map(pollutant => {
+        const value = document.getElementById(pollutant).value;
+        if (value) {
+            allEmpty = false;
+            const level = levels[pollutant];
+            return `
+                <div class="summary-item level-${level}">
+                    <span class="pollutant">${pollutant.toUpperCase()}</span>
+                    <span class="value">${value}</span>
+                    <span class="status">${level.toUpperCase()}</span>
+                </div>
+            `;
+        }
+        return '';
+    }).join('');
+    
+    if (allEmpty) {
+        summaryElement.innerHTML = '<p class="text-muted">Enter values to see analysis</p>';
+    } else {
+        summaryElement.innerHTML = summaryItems;
+    }
+}
+
+function updateAdvice() {
+    const pollutants = ['pm25', 'pm10', 'no2', 'co', 'o3'];
+    const levels = {};
+    
+    pollutants.forEach(pollutant => {
+        const value = parseFloat(document.getElementById(pollutant).value) || 0;
+        levels[pollutant] = updateIndividualAdvice(pollutant, value);
+    });
+    
+    updateOverallAdvice(Object.values(levels));
+    updatePollutantSummary(levels);
+    
+    // Show/hide real-time summary
+    const summaryElement = document.getElementById('realTimeSummary');
+    const hasValues = Object.values(levels).some(level => level !== null);
+    summaryElement.style.display = hasValues ? 'block' : 'none';
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateAdvice();
+});
+</script>
+
+<style>
+/* Real-time Advice Styles */
+.real-time-advice {
+    margin-top: 0.5rem;
+}
+
+.advice-badge {
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.advice-badge.level-safe {
+    background: #d1fae5;
+    color: #065f46;
+    border-left: 4px solid #10b981;
+}
+
+.advice-badge.level-moderate {
+    background: #fef3c7;
+    color: #92400e;
+    border-left: 4px solid #f59e0b;
+}
+
+.advice-badge.level-high {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+}
+
+.advice-badge.level-severe {
+    background: #f3e8ff;
+    color: #6b21a8;
+    border-left: 4px solid #8b5cf6;
+}
+
+.real-time-summary {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    display: none;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+}
+
+.summary-item.level-safe { background: #ecfdf5; }
+.summary-item.level-moderate { background: #fffbeb; }
+.summary-item.level-high { background: #fef2f2; }
+.summary-item.level-severe { background: #faf5ff; }
+
+.summary-item .pollutant {
+    font-weight: 600;
+    color: #374151;
+}
+
+.summary-item .value {
+    color: #6b7280;
+}
+
+.summary-item .status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.summary-item.level-safe .status { background: #10b981; color: white; }
+.summary-item.level-moderate .status { background: #f59e0b; color: white; }
+.summary-item.level-high .status { background: #ef4444; color: white; }
+.summary-item.level-severe .status { background: #8b5cf6; color: white; }
+
+/* Dynamic Advice Styles */
+.dynamic-advice {
+    margin-bottom: 2rem;
+}
+
+.advice-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.advice-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #d1d5db;
+}
+
+.overall-assessment {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.assessment-header h5 {
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.assessment-header p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.recommendation-section {
+    margin-bottom: 1.5rem;
+}
+
+.recommendation-section h6 {
+    color: #374151;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.recommendation-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recommendation-section li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.recommendation-section li:before {
+    content: "•";
+    color: #10b981;
+    font-weight: bold;
+}
+
+.emergency-alert {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.emergency-alert h6 {
+    color: #dc2626;
+    margin-bottom: 0.5rem;
+}
+
+.emergency-alert ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.emergency-alert li {
+    padding: 0.25rem 0;
+    color: #991b1b;
+}
+
+/* Guidelines Section */
+.guidelines-section {
+    margin: 2rem 0;
+}
+
+.guideline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.guideline-item:last-child {
+    border-bottom: none;
+}
+
+.pollutant-name {
+    font-weight: 600;
+    color: #374151;
+}
+
+.safe-level {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.guideline-item small {
+    color: #9ca3af;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Quick Tips */
+.quick-tips {
+    background: #eff6ff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+}
+
+.quick-tips h5 {
+    color: #1e40af;
+    margin-bottom: 1rem;
+}
+
+.quick-tips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.quick-tips li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #dbeafe;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.quick-tips li:before {
+    content: "💡";
+    font-size: 0.875rem;
+}
+
+/* Health Impact Preview */
+.health-impact-preview {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.health-impact-preview h3 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1f2937;
+}
+
+.impact-preview-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: transform 0.3s ease;
+}
+
+.impact-preview-card:hover {
+    transform: translateY(-5px);
+}
+
+.impact-preview-card i {
+    font-size: 2.5rem;
+    color: #2563eb;
+    margin-bottom: 1rem;
+}
+
+.impact-preview-card h5 {
+    color: #374151;
+    margin-bottom: 1rem;
+}
+
+.impact-preview-card p {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
